@@ -25,6 +25,13 @@ import { join } from "node:path";
 
 const WORD = "contraption";
 
+// Gate (RULES.txt): entry.txt must be UTF-8, 1–30 chars, not only whitespace.
+// Check the word against the gate before writing, so a bad word fails loudly
+// here instead of silently scoring zero on the server.
+if (WORD.length < 1 || WORD.length > 30 || !/^\S+$/.test(WORD)) {
+  throw new Error(`entry word fails the gate: ${JSON.stringify(WORD)}`);
+}
+
 const outputDir = process.env.MAKEFUN_OUTPUT_DIR ?? "/output";
 mkdirSync(outputDir, { recursive: true });
 writeFileSync(join(outputDir, "entry.txt"), WORD, "utf8");
